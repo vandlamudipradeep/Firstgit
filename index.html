@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>JS For Beginners</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header>
+      <h1>Appointment Booking App </h1>
+    </header>
+      <form onSubmit="savetoLocalStorage(event)">
+        <h1>Add User</h1>
+        <div class="msg"></div>
+        <div>
+          <label >Name:</label>
+          <input id="username" type="text" id="username" required/>
+        </div>
+        <div>
+          <label >Email:</label>
+          <input id="emailId" type="text" id="emailid" required/>
+        </div>
+        <div>
+          <label>Phone Number :</label>
+          <input id="phonenumber" type="tel" name="phonenumber" />
+        </div>
+<button>submit</button>
+      </form>
+    <ul id="listOfUsers"> 
+    </ul>
+    <script >
+function savetoLocalStorage(event){
+  event.preventDefault();
+  let name = event.target.username.value ;
+  let email = event.target.emailId.value ;
+   let phonenumber  = event.target.phonenumber.value  ; 
+   /*localStorage.setItem('name' , name);
+   localStorage.setItem('email' , email);
+   localStorage.setItem('pho', phonenumber);
+*/
+   let obj = {
+    name : name ,
+    email: email,
+    phonenumber : phonenumber
+   };
+  
+   localStorage.setItem(obj.email , JSON.stringify(obj));
+
+showNewUserOnScreen(obj)
+};
+window.addEventListener("DOMContentLoaded", ()=>{
+  let localStorageobj = localStorage ; 
+  let localStorageKeys = Object.keys(localStorageobj);
+  for(let i=0 ; i<localStorageKeys.length ;i++){
+    let keys = localStorageKeys[i];
+    let userDetailsString = localStorageobj[keys];
+    let userDetailsobj = JSON.parse(userDetailsString);
+    showNewUserOnScreen(userDetailsobj);
+  }
+}
+
+)
+function showNewUserOnScreen(user){
+  document.getElementById('emailId').value ='' ;
+   document.getElementById('username').value = ''; 
+    document.getElementById('phonenumber').value = '';
+ 
+
+ if(localStorage.getItem(emailId)!==null){
+  removeUserFromScreen(emailId);
+ }
+    let parentNode = document.getElementById('listOfUsers');
+    let childHTML = `<li id=${user.email}> ${user.name} - ${user.email} - ${user.phonenumber} 
+      <button onClick=deleteUser('${user.email}')>Delete User </button>
+      <button onClick=editUserDetails('${user.email}','${user.name}','${user.phonenumber}')>Edit User </button>
+      </li> ` ;
+
+    parentNode.innerHTML =parentNode.innerHTML+ childHTML
+  };
+ //Edit user 
+ function editUserDetails(emailId,name,phonenumber){
+   document.getElementById('emailId').value = emailId ;
+   document.getElementById('username').value = name ; 
+    document.getElementById('phonenumber').value = phonenumber ;
+   deleteUser(emailId)
+ }
+  //deleteUser('abc@emial.com');
+
+function deleteUser(emailId){
+console.log(emailId);
+localStorage.removeItem(emailId);
+removeUserFromScreen(emailId);
+}
+function removeUserFromScreen(emailId){
+  let parentNode = document.getElementById('listOfUsers');
+  let childNodeToBeDeleted = document.getElementById(emailId);
+
+  parentNode.removeChild(childNodeToBeDeleted);
+}
+
+
+
+/*let myobj ={
+  name : "pardeep" ,
+  age : 22 
+  
+};
+
+let myobj_serialized = JSON.stringify(myobj);
+//console.log(myobj_serialized)
+
+
+localStorage.setItem('myobj', myobj_serialized)
+console.log(localStorage);
+let myobj_deserialized =  JSON.parse(JSON.stringify(localStorage.getItem('myobj')));
+console.log(myobj_deserialized);*/
+
+
+    </script>
+  </body>
+</html>
